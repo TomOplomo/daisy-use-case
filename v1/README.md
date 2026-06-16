@@ -6,6 +6,9 @@ Pour faire tourner le projet localement :
 * `npm run dev`
 * Se rendre sur **http://localhost:3000/dashboard**
 
+Ou se rendre sur :
+**https://daisy-use-case-omega.vercel.app/**
+
 ## 1. Diagnostic du code existant
 En analysant le code fourni, j'ai identifié plusieurs problématiques qui freinent la scalabilité et la maintenabilité :
 * **Couplage UI / Logique :** Le fichier `dashboard.jsx` mélange l'appel réseau et le rendu complexe d'une carte au sein d'un `.map()`.
