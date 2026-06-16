@@ -1,36 +1,50 @@
+
 # Daisy - Patch ou refacto : à toi de trancher
 
 ## 0. Installation
-Pour faire tourner le projet localement :
+
+Pour lancer le projet localement sur votre machine :
+
 * `npm install`
 * `npm run dev`
-* Se rendre sur **http://localhost:3000/dashboard**
+* Rendez-vous sur **http://localhost:3000/dashboard**
 
-Ou se rendre sur :
-**https://daisy-use-case-omega.vercel.app/**
+Ou testez directement la démo en ligne ici :
+**[https://daisy-use-case-omega.vercel.app/](https://daisy-use-case-omega.vercel.app/)**
 
-## 1. Diagnostic du code existant
-En analysant le code fourni, j'ai identifié plusieurs problématiques qui freinent la scalabilité et la maintenabilité :
-* **Couplage UI / Logique :** Le fichier `dashboard.jsx` mélange l'appel réseau et le rendu complexe d'une carte au sein d'un `.map()`.
-* **Aucune gestion d'erreur :** L'appel `fetch` ne possède pas de bloc `.catch()`. En cas de panne de l'API, l'interface utilisateur reste figée sans aucun retour visuel.
-* **Styles en ligne :** L'utilisation de styles via l'attribut `style={{...}}` pose un problème de maintenabilité et de performance. Visuellement, cela noie la logique du composant sous des dizaines de lignes de design, rendant le fichier très lourd à lire. Techniquement, cette approche force React à recréer des objets JavaScript en mémoire à chaque rafraîchissement de l'interface.
-* **Textes en dur :** Des éléments comme `"chargement..."` sont insérés directement dans le JSX, ce qui rend la traduction de l'application impossible en l'état.
-* **Over-fetching:** La requête `.select('*, bookings(*), workshops(*)')` charge la totalité des tables liées en mémoire sans filtrer les colonnes nécessaires.
-* **Conventions de nommage :** Le code JavaScript n'est pas standardisé (utilisation de *snake_case* pour `bookings_count` au lieu du *camelCase* habituel).
+## 1. Les bonus de cette démo
 
-## 2. Arbitrage : Patch vs Refacto
-J'ai tranché en faveur d'une **Refacto totale**.
-Ajouter une nouvelle condition pour le badge "Complet" par dessus un code deja chargé et une requête API non optimisée n'aurait fait qu'empirer la dette technique. Un patch aurait répondu au besoin immédiat mais au détriment de l'évolution. Repartir sur de bonnes bases permet d'isoler les responsabilités et de sécuriser l'application.
+Pour rendre le rendu plus réaliste, j'ai "habillé" le projet en simulant l'environnement d'une vraie application. J'ai intégré une fausse Navbar et Footer. Surtout, j'ai mis en place un bouton "switch" en haut de la page qui permet de basculer entre deux affichages :
 
-## 3. Ce que j'ai fait
-* **Utilisation de l'API Next.js :** J'ai séparé le Back du Front en utilisant le système de routes intégré (`pages/api/slots.js`) pour y servir mes données mockées.
-* **Architecture de la donnée :** J'ai simulé une donnée pré-calculée côté Backend (`bookingsCount`). Le Frontend n'a plus à faire d'opérations mathématiques lourdes.
-* **Création d'un composant dédié (`SlotCard.jsx`) :** J'ai extrait la carte dans son propre fichier. J'ai remplacé le CSS en ligne par des classes Tailwind en respectant la charte graphique. C'est ici qu'est gérée la logique d'affichage du badge.
-* **Système de traduction :** J'ai extrait l'intégralité des textes statiques dans un dictionnaire propre (`locales/fr.json`).
-* **Dashboard orchestrateur :** Le fichier `dashboard.jsx` a été nettoyé. Il ne s'occupe plus de design, mais gère strictement les 4 états de la donnée : *Loading*, *Error*, *Empty*, et *Success*.
-* **Standardisation :** Pour respecter les standards professionnels, l'intégralité du code a été uniformisée en anglais.
+* **Une vue "Page" :** en format grille, plus large, idéale pour un écran d'ordinateur.
+* **Une vue "Widget" :** plus compacte et flottante, qui simule l'intégration de votre module de réservation directement sur le site web d'un artisan.
 
-## 4. Ce que je laisserais pour plus tard
-L'architecture Frontend est maintenant propre et prête pour la production. Les prochaines étapes techniques concerneraient exclusivement l'infrastructure:
-* **La vraie connexion Supabase :** Remplacer les données mockées dans la route API par le vrai SDK Supabase, en s'assurant d'écrire une requête SQL optimisée qui ne retourne que les champs stricts (*).
-* **Tests automatisés :** Mettre en place des tests de composants pour garantir que la logique de calcul d'affichage du badge "COMPLET" ne régresse jamais lors de futures mises à jour.
+## 2. Diagnostic du code de départ
+
+En lisant le code fourni, j'ai repéré plusieurs choses qui posaient problème pour l'avenir :
+
+* **Le code est mélangé :** Le fichier `dashboard.jsx` gère à la fois l'appel réseau et le rendu visuel complet des cartes, ce qui le rend lourd à lire.
+* **Zéro gestion d'erreur :** L'appel `fetch` n'a pas de sécurité (pas de bloc `.catch()`). Si l'API plante, l'écran reste bloqué sur "chargement..." sans prévenir l'utilisateur.
+* **Styles en ligne :** L'utilisation de `style={{...}}` ralentit l'application et rend le code très dur à maintenir. Si on veut changer une couleur de la marque, il faut repasser sur chaque ligne.
+* **Textes en dur :** Des mots comme "chargement..." sont écrits directement dans le code, ce qui empêcherait de traduire l'application plus tard.
+* **Requête trop gourmande :** La requête originale à la base de données récupérait des tables entières (avec le sélecteur `*`) alors que le front n'a besoin que de quelques infos précises.
+* **Conventions :** Les variables n'étaient pas nommées selon les standards JavaScript (utilisation de `bookings_count` au lieu de `bookingsCount`).
+
+## 3. Patch vs Refonte totale
+
+J'ai tranché en faveur d'une **refonte totale**.
+Rajouter simplement la condition pour le badge "Complet" sur un code déjà fragile n'aurait fait qu'empirer les choses. Un simple "patch" répond au besoin tout de suite, mais crée des problèmes pour la suite. Repartir sur des bases propres permet d'avoir un code isolé, facile à modifier, et prêt pour la production.
+
+## 4. Ce que j'ai modifié
+
+* **Logique simplifiée :** J'ai fait en sorte que la donnée soit triée et préparée côté Backend. Le Frontend devient "bête" et se contente d'afficher, sans faire de gros calculs.
+* **Nouveau composant (`SlotCard.jsx`) :** J'ai extrait la carte dans son propre fichier. J'ai supprimé tout le CSS en ligne pour le remplacer par des classes Tailwind propres, aux couleurs de Daisy. La logique d'affichage du badge "COMPLET" est gérée ici.
+* **Fichier de langues :** J'ai sorti tous les textes de l'interface pour les mettre dans un fichier dédié (`locales/fr.json`).
+* **Un Dashboard clair :** Le fichier principal ne s'occupe plus du design. Il fait juste le tri entre 4 situations : Chargement, Erreur, Liste vide, et Succès.
+
+## 5. Les prochaines étapes
+
+L'interface est maintenant propre et standardisée. Les prochaines étapes concerneraient surtout la base de données :
+
+* **La vraie connexion Supabase :** Remplacer mes données de test par une vraie requête SQL optimisée qui ne retourne strictement que les champs nécessaires.
+* **Tests automatiques :** Ajouter des petits tests sur le composant pour garantir que le badge "COMPLET" s'affichera toujours au bon moment lors des futures mises à jour de l'app.

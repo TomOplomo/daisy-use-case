@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import SlotCard from '../components/SlotCard';
+import WidgetLayout from '../components/dashboard/WidgetLayout';
+import PageLayout from '../components/dashboard/PageLayout';
 import lang from '../locales/fr.json';
 
 export default function Dashboard() {
     const [slots, setSlots] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [isWidgetMode, setIsWidgetMode] = useState(false);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -28,40 +31,26 @@ export default function Dashboard() {
         fetchDashboardData();
     }, []);
 
-    if (isLoading) {
-        return (
-            <div className="min-h-screen bg-daisy-cream flex items-center justify-center p-4">
-                <p className="text-daisy-purple font-medium animate-pulse">{lang.loading}</p>
-            </div>
-        );
-    }
+    return (
+        <div className="flex-1 flex flex-col w-full">
 
-    if (error) {
-        return (
-            <div className="min-h-screen bg-daisy-cream p-4 md:p-8">
-                <div className="max-w-2xl mx-auto p-4 bg-red-50 text-daisy-coral rounded-lg border border-red-200">
-                    <p className="font-bold mb-1">Error</p>
-                    <p>{error}</p>
+            <div className="w-full flex justify-center py-6 bg-transparent">
+                <div className="bg-gray-200/60 p-1 rounded-xl flex gap-1 shadow-inner">
+                    <button onClick={() => setIsWidgetMode(false)} className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${!isWidgetMode ? 'bg-white shadow-sm text-daisy-purple' : 'text-gray-500 hover:text-gray-700'}`}>
+                        Page View
+                    </button>
+                    <button onClick={() => setIsWidgetMode(true)} className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${isWidgetMode ? 'bg-white shadow-sm text-daisy-purple' : 'text-gray-500 hover:text-gray-700'}`} >
+                        Widget View
+                    </button>
                 </div>
             </div>
-        );
-    }
 
-    return (
-        <div className="min-h-screen bg-daisy-cream p-4 md:p-8">
-            <div className="max-w-2xl mx-auto">
-                <h1 className="text-2xl font-bold text-daisy-purple mb-6">{lang.pageTitle}</h1>
+            {isWidgetMode ? (
+                <WidgetLayout slots={slots} isLoading={isLoading} error={error} />
+            ) : (
+                <PageLayout slots={slots} isLoading={isLoading} error={error} />
+            )}
 
-                {slots.length === 0 ? (
-                    <p className="text-center text-gray-500 py-8">{lang.empty}</p>
-                ) : (
-                    <div className="flex flex-col gap-3">
-                        {slots.map(slot => (
-                            <SlotCard key={slot.id} slot={slot} />
-                        ))}
-                    </div>
-                )}
-            </div>
         </div>
     );
 }

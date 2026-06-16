@@ -1,5 +1,5 @@
 import React from 'react';
-import lang from '../locales/fr.json';
+import lang from '../../locales/fr.json';
 
 export default function SlotCard({ slot }) {
     const isConfirmed = slot.status === 'confirmed';
@@ -11,20 +11,25 @@ export default function SlotCard({ slot }) {
         : "bg-white text-gray-800 border border-gray-200";
 
     return (
-        <div className={`p-4 rounded-lg flex flex-col gap-2 shadow-sm ${cardStyle}`}>
-            <div className="flex justify-between items-start">
-                <h3 className="font-semibold text-lg leading-tight">{slot.workshopTitle}</h3>
-                <span className="text-sm opacity-80 whitespace-nowrap ml-2">{slot.time}</span>
+        <div className={`p-5 rounded-xl flex flex-col h-30 shadow-sm transition-shadow hover:shadow-md ${cardStyle}`}>
+
+            <div className="flex justify-between items-start mb-2">
+                <h3 className="font-semibold text-lg leading-snug line-clamp-2 pr-2" title={slot.workshopTitle}>
+                    {slot.workshopTitle}
+                </h3>
+                <span className="text-sm font-medium opacity-80 whitespace-nowrap mt-1">
+                    {slot.time}
+                </span>
             </div>
 
-            <div className="flex items-center justify-between mt-2">
-                <p className="text-sm">
-                    {slot.bookingsCount} / {slot.capacity} {lang.participants}
+            <div className="flex items-center justify-between mt-auto">
+                <p className="text-sm font-medium">
+                    {slot.bookingsCount} / {slot.capacity} <span className="opacity-80 font-normal">{lang.participants}</span>
                 </p>
 
                 {isConfirmed ? (
                     isFull ? (
-                        <span className="bg-daisy-coral text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                        <span className="bg-daisy-coral text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                             {lang.fullBadge}
                         </span>
                     ) : (
@@ -38,6 +43,7 @@ export default function SlotCard({ slot }) {
                     </span>
                 )}
             </div>
+
         </div>
     );
 }

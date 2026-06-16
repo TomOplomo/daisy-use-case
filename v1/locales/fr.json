@@ -4,7 +4,19 @@
     "empty": "Aucun atelier prévu aujourd'hui.",
     "fullBadge": "COMPLET",
     "spotsLeft": "place(s) restante(s)",
+    "manageBookings": "Gérez vos réservations quotidiennes",
+    "newWorkshop": "Nouvel atelier",
     "participants": "participants",
     "pending": "En attente de confirmation",
-    "pageTitle": "Planning du jour"
+    "pageTitle": "Planning du jour",
+    "brandName": "TomB.",
+    "navDashboard": "Tableau de bord",
+    "navCalendar": "Calendrier",
+    "navClients": "Clients",
+    "navSettings": "Paramètres",
+    "btnProfile": "Mon profil",
+    "poweredBy": "Propulsé par",
+    "footerCopyright": "© 2026 TomB · Fait avec ❤️ à Paris",
+    "footerTerms": "Mentions légales",
+    "footerPrivacy": "Politique de confidentialité"
 }
