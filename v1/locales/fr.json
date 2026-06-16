@@ -1,0 +1,10 @@
+{
+    "loading": "Chargement du tableau de bord...",
+    "error": "Échec du chargement des données.",
+    "empty": "Aucun atelier prévu aujourd'hui.",
+    "fullBadge": "COMPLET",
+    "spotsLeft": "place(s) restante(s)",
+    "participants": "participants",
+    "pending": "En attente de confirmation",
+    "pageTitle": "Planning du jour"
+}

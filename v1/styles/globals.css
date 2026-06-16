@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FCF8E8;
+  --foreground: #171717;
+
+  /* charte Daisy */
+  --daisy-purple: #800080;
+  --daisy-coral: #F24E3E;
+  --daisy-cream: #FCF8E8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-daisy-purple: var(--daisy-purple);
+  --color-daisy-coral: var(--daisy-coral);
+  --color-daisy-cream: var(--daisy-cream);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
