@@ -10,7 +10,7 @@ Pour faire tourner le projet localement :
 En analysant le code fourni, j'ai identifié plusieurs problématiques qui freinent la scalabilité et la maintenabilité :
 * **Couplage UI / Logique :** Le fichier `dashboard.jsx` mélange l'appel réseau et le rendu complexe d'une carte au sein d'un `.map()`.
 * **Aucune gestion d'erreur :** L'appel `fetch` ne possède pas de bloc `.catch()`. En cas de panne de l'API, l'interface utilisateur reste figée sans aucun retour visuel.
-**Styles en ligne :** L'utilisation de styles via l'attribut `style={{...}}` pose un problème de maintenabilité et de performance. Visuellement, cela noie la logique du composant sous des dizaines de lignes de design, rendant le fichier très lourd à lire. Techniquement, cette approche force React à recréer des objets JavaScript en mémoire à chaque rafraîchissement de l'interface.
+* **Styles en ligne :** L'utilisation de styles via l'attribut `style={{...}}` pose un problème de maintenabilité et de performance. Visuellement, cela noie la logique du composant sous des dizaines de lignes de design, rendant le fichier très lourd à lire. Techniquement, cette approche force React à recréer des objets JavaScript en mémoire à chaque rafraîchissement de l'interface.
 * **Textes en dur :** Des éléments comme `"chargement..."` sont insérés directement dans le JSX, ce qui rend la traduction de l'application impossible en l'état.
 * **Over-fetching:** La requête `.select('*, bookings(*), workshops(*)')` charge la totalité des tables liées en mémoire sans filtrer les colonnes nécessaires.
 * **Conventions de nommage :** Le code JavaScript n'est pas standardisé (utilisation de *snake_case* pour `bookings_count` au lieu du *camelCase* habituel).
